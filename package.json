@@ -1,12 +1,9 @@
 {
-  "name": "gatsby-starter-blog",
+  "name": "dot-dev",
   "private": true,
-  "description": "A starter for a blog powered by Gatsby and Markdown",
+  "description": "A scrupulous frontend engineering and developer lifestyle blog",
   "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
-  "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
-  },
+  "author": "Phillip Luther <dev@phillipluther.com>",
   "dependencies": {
     "gatsby": "^3.4.0",
     "gatsby-plugin-feed": "^3.4.0",
@@ -35,15 +32,13 @@
   "devDependencies": {
     "prettier": "2.2.1"
   },
-  "homepage": "https://github.com/gatsbyjs/gatsby-starter-blog#readme",
-  "keywords": [
-    "gatsby"
-  ],
-  "license": "0BSD",
+  "homepage": "https://dev.phillipluther.com",
+  "keywords": [],
+  "license": "UNLICENSED",
   "main": "n/a",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gatsbyjs/gatsby-starter-blog.git"
+    "url": "git+https://github.com/phillipluther/dot-dev.git"
   },
   "scripts": {
     "build": "gatsby build",
