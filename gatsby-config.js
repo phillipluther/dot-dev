@@ -1,57 +1,59 @@
 module.exports = {
   siteMetadata: {
-    title: 'dev.phillipluther.com',
+    title: "dev.phillipluther.com",
     author: {
-      name: 'Phillip Luther',
-      summary: 'Phillip Luther is a frontend engineering manager and active web app developer based in San Francisco, CA. The first JavaScript he ever wrote was for a mouseover image swap and currently favors Vue over React in a game of inches.',
+      name: "Phillip Luther",
+      summary:
+        "Phillip Luther is a frontend engineering manager and active web app developer based in San Francisco, CA. The first JavaScript he ever wrote was for a mouseover image swap and currently favors Vue over React in a game of inches.",
     },
-    description: 'A scrupulous frontend engineering and developer lifestyle blog',
-    siteUrl: 'https://dev.phillipluther.com',
+    description:
+      "A scrupulous frontend engineering and developer lifestyle blog",
+    siteUrl: "https://dev.phillipluther.com",
     social: {
-      twitter: 'phillipluther',
-      youtube: 'phillipluther',
+      twitter: "phillipluther",
+      youtube: "phillipluther",
     },
   },
   plugins: [
-    'gatsby-plugin-image',
+    "gatsby-plugin-image",
     {
-      resolve: 'gatsby-source-filesystem',
+      resolve: "gatsby-source-filesystem",
       options: {
         path: `${__dirname}/content/blog`,
-        name: 'blog',
+        name: "blog",
       },
     },
     {
-      resolve: 'gatsby-source-filesystem',
+      resolve: "gatsby-source-filesystem",
       options: {
-        name: 'images',
+        name: "images",
         path: `${__dirname}/src/images`,
       },
     },
     {
-      resolve: 'gatsby-transformer-remark',
+      resolve: "gatsby-transformer-remark",
       options: {
         plugins: [
           {
-            resolve: 'gatsby-remark-images',
+            resolve: "gatsby-remark-images",
             options: {
               maxWidth: 630,
             },
           },
           {
-            resolve: 'gatsby-remark-responsive-iframe',
+            resolve: "gatsby-remark-responsive-iframe",
             options: {
-              wrapperStyle: 'margin-bottom: 1.0725rem',
+              wrapperStyle: "margin-bottom: 1.0725rem",
             },
           },
-          'gatsby-remark-prismjs',
-          'gatsby-remark-copy-linked-files',
-          'gatsby-remark-smartypants',
+          "gatsby-remark-prismjs",
+          "gatsby-remark-copy-linked-files",
+          "gatsby-remark-smartypants",
         ],
       },
     },
-    'gatsby-transformer-sharp',
-    'gatsby-plugin-sharp',
+    "gatsby-transformer-sharp",
+    "gatsby-plugin-sharp",
     // {
     //   resolve: 'gatsby-plugin-google-analytics',
     //   options: {
@@ -59,7 +61,7 @@ module.exports = {
     //   },
     // },
     {
-      resolve: 'gatsby-plugin-feed',
+      resolve: "gatsby-plugin-feed",
       options: {
         query: `
           {
@@ -76,15 +78,15 @@ module.exports = {
         feeds: [
           {
             serialize: ({ query: { site, allMarkdownRemark } }) => {
-              return allMarkdownRemark.nodes.map(node => {
+              return allMarkdownRemark.nodes.map((node) => {
                 return Object.assign({}, node.frontmatter, {
                   description: node.excerpt,
                   date: node.frontmatter.date,
                   url: site.siteMetadata.siteUrl + node.fields.slug,
                   guid: site.siteMetadata.siteUrl + node.fields.slug,
-                  custom_elements: [{ 'content:encoded': node.html }],
-                })
-              })
+                  custom_elements: [{ "content:encoded": node.html }],
+                });
+              });
             },
             query: `
               {
@@ -105,27 +107,33 @@ module.exports = {
                 }
               }
             `,
-            output: '/rss.xml',
+            output: "/rss.xml",
           },
         ],
       },
     },
     {
-      resolve: 'gatsby-plugin-manifest',
+      resolve: "gatsby-plugin-manifest",
       options: {
-        name: 'Gatsby Starter Blog',
-        short_name: 'GatsbyJS',
-        start_url: '/',
-        background_color: '#ffffff',
-        theme_color: '#663399',
-        display: 'minimal-ui',
-        icon: 'src/images/gatsby-icon.png', // This path is relative to the root of the site.
+        name: "Gatsby Starter Blog",
+        short_name: "GatsbyJS",
+        start_url: "/",
+        background_color: "#ffffff",
+        theme_color: "#663399",
+        display: "minimal-ui",
+        icon: "src/images/gatsby-icon.png", // This path is relative to the root of the site.
       },
     },
-    'gatsby-plugin-react-helmet',
-    'gatsby-plugin-gatsby-cloud',
+    "gatsby-plugin-react-helmet",
+    "gatsby-plugin-gatsby-cloud",
+    {
+      resolve: "gatsby-plugin-typography",
+      options: {
+        pathToConfigModule: "src/typography",
+      },
+    },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // 'gatsby-plugin-offline',
   ],
-}
+};
