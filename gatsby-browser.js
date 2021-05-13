@@ -1,11 +1,9 @@
 // custom typefaces
-// import "typeface-montserrat"
-// import "typeface-merriweather"
-// normalize CSS across browsers
-// import "./src/normalize.css"
+import 'typeface-raleway';
+import 'typeface-poppins';
+
 // custom CSS styles
-// import "./src/style.css";
+import "./src/global.css";
 
 // Highlighting for code blocks
-// import 'src/typography';
 import 'prismjs/themes/prism.css';

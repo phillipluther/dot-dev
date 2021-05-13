@@ -16,10 +16,12 @@ const Bio = () => {
         siteMetadata {
           author {
             name
-            summary
+            bio
+            email
           }
           social {
             twitter
+            youtube
           }
         }
       }
@@ -44,14 +46,24 @@ const Bio = () => {
       /> */}
       {author?.name && (
         <>
-          <p>{author?.summary || null}</p>
-          <p>
+          <p>{author?.bio || null}</p>
+          <ul>
             {social.twitter ? (
-              <a href={`https://twitter.com/${social.twitter}`}>
-                {`@${social.twitter}`} on Twitter
-              </a>
+              <li>
+                <a href={`https://twitter.com/${social.twitter}`}>
+                  {`@${social.twitter}`} on Twitter
+                </a>
+              </li>
             ) : null}
-          </p>
+
+            {social.youtube ? (
+              <li>
+                <a href={`https://youtube.com/${social.youtube}`}>
+                  {social.youtube} on YouTube
+                </a>
+              </li>
+            ) : null}
+          </ul>
         </>
       )}
     </div>

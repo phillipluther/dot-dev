@@ -1,13 +1,14 @@
 module.exports = {
   siteMetadata: {
-    title: "dev.phillipluther.com",
+    title: "Phillip Luther, Frontend Engineer",
     author: {
       name: "Phillip Luther",
-      summary:
-        "Phillip Luther is a frontend engineering manager and active web app developer based in San Francisco, CA. The first JavaScript he ever wrote was for a mouseover image swap and currently favors Vue over React in a game of inches.",
+      email: 'dev@phillipluther.com',
+      bio:
+        "My name is Phil. I've been doing the frontend thing for about 20 years now. I cut my teeth on `MM_` prefixes and sliding door jelly buttons. I remember when jQuery was brand new. In a forced-choice question I'd pick Vue over React, but only by an inch or two. You're invited to ask me why. I'm currently living the developer lifestyle in San Francisco, CA where I work as an engineering manager and maker of web apps.",
     },
     description:
-      "A scrupulous frontend engineering and developer lifestyle blog",
+      "(Hopefully) Cool HTML/CSS/JavaScript tutorials, philosophies, and stories from 20 years in the frontend trenches",
     siteUrl: "https://dev.phillipluther.com",
     social: {
       twitter: "phillipluther",
@@ -113,27 +114,19 @@ module.exports = {
       },
     },
     {
-      resolve: "gatsby-plugin-manifest",
+      resolve: 'gatsby-plugin-manifest',
       options: {
-        name: "Gatsby Starter Blog",
-        short_name: "GatsbyJS",
-        start_url: "/",
-        background_color: "#ffffff",
-        theme_color: "#663399",
-        display: "minimal-ui",
-        icon: "src/images/gatsby-icon.png", // This path is relative to the root of the site.
+        name: 'Phillip Luther, Frontend Engineer',
+        short_name: 'phillipluther.dev',
+        start_url: '/',
+        background_color: '#ffffff',
+        theme_color: '#292929',
+        display: 'minimal-ui',
+        icon: 'src/images/gatsby-icon.png', // This path is relative to the root of the site.
       },
     },
-    "gatsby-plugin-react-helmet",
-    "gatsby-plugin-gatsby-cloud",
-    {
-      resolve: "gatsby-plugin-typography",
-      options: {
-        pathToConfigModule: "src/typography",
-      },
-    },
-    // this (optional) plugin enables Progressive Web App + Offline functionality
-    // To learn more, visit: https://gatsby.dev/offline
-    // 'gatsby-plugin-offline',
+    'gatsby-plugin-react-helmet',
+    'gatsby-plugin-gatsby-cloud',
+    'gatsby-plugin-postcss',
   ],
 };
