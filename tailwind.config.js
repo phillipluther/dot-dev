@@ -5,7 +5,7 @@ module.exports = {
     extend: {},
     fontFamily: {
       body: ['Poppins', 'sans-serif'],
-      display: ['Raleway', 'sans-serif'],
+      display: ['Prompt', 'sans-serif'],
     },
   },
   variants: {

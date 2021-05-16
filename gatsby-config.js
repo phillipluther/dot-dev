@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: "Phillip Luther, Frontend Engineer",
+    title: "The Scrupulous Developer",
     author: {
       name: "Phillip Luther",
       email: 'dev@phillipluther.com',
@@ -116,8 +116,8 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        name: 'Phillip Luther, Frontend Engineer',
-        short_name: 'phillipluther.dev',
+        name: 'The Scrupulous Developer',
+        short_name: 'scrupulous.dev',
         start_url: '/',
         background_color: '#ffffff',
         theme_color: '#292929',

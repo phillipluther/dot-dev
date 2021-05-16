@@ -1,5 +1,5 @@
 // custom typefaces
-import 'typeface-raleway';
+import 'typeface-prompt';
 import 'typeface-poppins';
 
 // custom CSS styles
