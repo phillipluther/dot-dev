@@ -15,14 +15,14 @@ const Layout = ({ location, title, children }) => {
           <TitleTag className="font-display p-4 md:p-6">
             <Link to="/">
               <span className="font-black text-2xl text-gray-200 block tracking-wide leading-none uppercase">
-                The<em className="text-green-300 not-italic">Scrupulous</em>Developer
+                The<em className="text-green-300 not-italic">Principled</em>Engineer
               </span>
-              <span className="font-medium italic text-lg leading-none block mt-1">Phillip Luther's Frontend Engineering Blog</span>
+              <span className="font-medium italic text-lg leading-none block mt-1">Code well and code good.</span>
             </Link>
           </TitleTag>
 
           <nav className="md:flex justify-between flex-grow p-1 md:p-6">
-            <PrimaryNav />
+            {/* <PrimaryNav /> */}
             <SocialMenu />
           </nav>
         </div>

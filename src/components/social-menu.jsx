@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FaTwitter, FaGithub } from 'react-icons/fa';
+import { FaTwitter, FaGithub, FaRss } from 'react-icons/fa';
 
 const socialLinks = [
   {
@@ -11,6 +11,11 @@ const socialLinks = [
     label: 'Follow @phillipluther on GitHub',
     icon: FaGithub,
     href: 'https://github.com/phillipluther',
+  },
+  {
+    label: 'Subscribe to the blog with RSS',
+    icon: FaRss,
+    href: '/rss.xml',
   },
 ];
 

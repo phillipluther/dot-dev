@@ -1,15 +1,15 @@
 module.exports = {
   siteMetadata: {
-    title: "The Scrupulous Developer",
+    title: 'The Principled Engineer',
     author: {
-      name: "Phillip Luther",
+      name: 'Phillip Luther',
       email: 'dev@phillipluther.com',
       bio:
         "My name is Phil. I've been doing the frontend thing for about 20 years now. I cut my teeth on `MM_` prefixes and sliding door jelly buttons. I remember when jQuery was brand new. In a forced-choice question I'd pick Vue over React, but only by an inch or two. You're invited to ask me why. I'm currently living the developer lifestyle in San Francisco, CA where I work as an engineering manager and maker of web apps.",
     },
     description:
-      "(Hopefully) Cool HTML/CSS/JavaScript tutorials, philosophies, and stories from 20 years in the frontend trenches",
-    siteUrl: "https://dev.phillipluther.com",
+      "(Hopefully) Cool HTML/CSS/JavaScript tutorials, modern engineering techniques, and stories from 20 years in the frontend trenches",
+    siteUrl: "https://principledengineer.com",
     social: {
       twitter: "phillipluther",
       youtube: "phillipluther",
@@ -116,8 +116,8 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        name: 'The Scrupulous Developer',
-        short_name: 'scrupulous.dev',
+        name: 'The Principled Engineer',
+        short_name: 'principledengineer.com',
         start_url: '/',
         background_color: '#ffffff',
         theme_color: '#292929',
