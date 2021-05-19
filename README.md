@@ -1,3 +1,5 @@
-# Unnamed Frontend Engineering Blog
+# The Principled Engineer
 
-Working with Gatsby and Tailwind to try and resurrect my old engineering blog.
+Trying to rez my development blog. Trying to keep it simple and not over-engineer the thing; I'm intentionally avoiding static site generators like Gatsby and Eleventy and Jekyll and Hugo and whatever, as the process of "put markdown into a template" seems maddeningly simple.
+
+We'll see ...

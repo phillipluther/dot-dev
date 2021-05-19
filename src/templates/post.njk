@@ -1,0 +1,9 @@
+{% extends 'base.njk' %}
+
+{% set ogType = 'article' %}
+
+{% block og_tags %}
+  <meta property="article:author" content="https://principledengineer.com/about">
+  <meta property="article:published_time" content="{{ date }}">
+  <meta property="article:tag" content="{{ tags }}">
+{% endblock %}
