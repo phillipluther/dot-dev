@@ -10,6 +10,7 @@ import {
   POSTS_DIR,
   DIST_DIR,
   TEMPLATES_DIR,
+  BASE_URL,
 } from './constants';
 
 export default async function() {
@@ -32,9 +33,11 @@ export default async function() {
           try {
             if (!err && parsed) {
               const { data, contents: content } = parsed;
+              const url = new URL(dir, BASE_URL);
               const rendered = nunjucks.render('post.njk', {
                 ...data as object,
                 content,
+                url,
               });
 
               const postDir = path.join(DIST_DIR, dir);

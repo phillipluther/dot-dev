@@ -15,13 +15,14 @@
 
   <link rel="manifest" href="site.webmanifest">
   <link rel="apple-touch-icon" href="icon.png">
-  <!-- Place favicon.ico in the root directory -->
 
   <meta name="theme-color" content="#FFFBEB">
 </head>
 
 <body>
-  {{ content|safe }}  
+  {% block content %}
+    {{ content|safe }}  
+  {% endblock %}
 </body>
 
 </html>
