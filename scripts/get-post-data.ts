@@ -7,12 +7,10 @@ import remarkExtractFrontmatter from 'remark-extract-frontmatter';
 import yaml from 'yaml';
 import {
   POSTS_DIR,
-  DIST_DIR,
-  TEMPLATES_DIR,
   BASE_URL,
 } from './constants';
 
-interface PostData {
+export interface PostData {
   title: string;
   date: string;
   description?: string;
@@ -21,40 +19,56 @@ interface PostData {
   tags?: string[];
 };
 
+const timeHandle = 'Gathered post data';
+
 async function getPostData(): Promise<PostData[]> {
   try {
+    console.time(timeHandle);
     const postDirs: string[] = await fs.readdir(POSTS_DIR);
 
-    return Promise.all(postDirs.map(async (dir) => {
+    const promisedPostData = Promise.all(postDirs.map(async (dir) => {
       const markdownFilePath = path.join(POSTS_DIR, `${dir}/index.md`);
       const markdownFileContents = (await fs.readFile(markdownFilePath)).toString();
 
-      remark()
-      .use(remarkHtml)
-      .use(remarkFrontmatter)
-      .use(remarkExtractFrontmatter, { yaml: yaml.parse })
-      .process(markdownFileContents, async (err, parsed) => {
-        try {
-          if (!err && parsed) {
-            const { data: frontmatter, contents } = parsed;
-            const url = new URL(dir, BASE_URL);
+      // TODO: what's the proper type definition for this?
+      const parsed: any = remark()
+        .use(remarkHtml)
+        .use(remarkFrontmatter)
+        .use(remarkExtractFrontmatter, { yaml: yaml.parse })
+        .processSync(markdownFileContents);
 
-            console.log('Frontmatter', frontmatter);
-          } else {
-            throw err;
-          }
-        } catch (writeError) {
-          console.error(writeError);
+      const { href: url, pathname: slug } = new URL(dir, BASE_URL);
+      const {
+        contents: content,
+        data: {
+          title,
+          date,
+          ...frontmatter
         }
-      });
+      } = parsed;
+
       return {
-        title: 'dummy',
-        date: 'dummy',
+        title,
+        date,
+        slug,
+        url,
+        content,
+        ...frontmatter,
       };
     }));
+
+    console.timeEnd(timeHandle);
+    return promisedPostData;
   } catch (err) {
     console.error(err);
   }
 }
 
-export default getPostData;
+let postData: PostData[]|Promise<PostData[]>;
+export default () => {
+  if (!postData) {
+    postData = getPostData();
+  }
+
+  return postData;
+}
