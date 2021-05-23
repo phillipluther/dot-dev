@@ -4,15 +4,18 @@ import nunjucks from 'nunjucks';
 import getPostData, { PostData } from './get-post-data';
 import { TEMPLATES_DIR, DIST_DIR } from './constants';
 
+const timeHandle = 'Posts built';
+
 async function buildPosts(): Promise<PostData[]> {
   try {
+    console.time(timeHandle);
     const allPostData = await getPostData();
 
     nunjucks.configure(TEMPLATES_DIR, {
       autoescape: true,
     });
 
-    return Promise.all(allPostData.map(async(postData: PostData) => {
+    const promisedBuilds = Promise.all(allPostData.map(async (postData: PostData) => {
       try {
         const { slug, ...templateProps } = postData;
         const rendered = nunjucks.render('post.njk', templateProps);
@@ -26,6 +29,9 @@ async function buildPosts(): Promise<PostData[]> {
         console.error(writeError);
       }
     }));
+
+    console.timeEnd(timeHandle);
+    return promisedBuilds;
   } catch (err) {
     console.error(err);
   }
