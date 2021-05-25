@@ -1,1 +1,11 @@
 {% extends 'base.njk' %}
+
+{% block content %}
+  <h2 class="archive-title">{{ title }}</h2>
+  {% for post in posts %}
+    <article class="archive-article">
+      <h3 class="article-title">{{ post.title }}</h3>
+      <p>{{ post.description }}</p>
+    </article>
+  {% endfor %}
+{% endblock %}
