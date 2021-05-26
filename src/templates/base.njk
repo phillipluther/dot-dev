@@ -11,11 +11,10 @@
   <meta property="og:type" content="{{ ogType|default('website') }}">
   <meta property="og:url" content="{{ url }}">
   <meta property="og:image" content="{{ ogImage|default('images/principled-engineer-ogimage.png') }}">
-  {% block og_tags %}{% endblock %}
+  {%- block og_tags %}{% endblock %}
 
   <link rel="manifest" href="site.webmanifest">
   <link rel="apple-touch-icon" href="icon.png">
-
   <meta name="theme-color" content="#FFFBEB">
 </head>
 
