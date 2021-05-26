@@ -47,6 +47,8 @@ async function getPostData(): Promise<PostData[]> {
         }
       } = parsed;
 
+      console.log('BASE URL', POSTS_BASE_URL)
+      console.log('URL', url);
       return {
         title,
         date,

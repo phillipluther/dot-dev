@@ -5,7 +5,7 @@ const DIST_DIR = path.resolve('dist');
 const POSTS_DIR = path.join(SRC_DIR, 'posts');
 const TEMPLATES_DIR = path.join(SRC_DIR, 'templates');
 const BASE_URL = 'https://principledengineer.com';
-const POSTS_BASE_URL = path.join(BASE_URL, 'posts');
+const POSTS_BASE_URL = new URL('posts', BASE_URL);
 
 export {
   BASE_URL,
