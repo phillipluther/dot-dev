@@ -19,7 +19,7 @@ async function buildPosts(): Promise<PostData[]> {
       try {
         const { slug, ...templateProps } = postData;
         const rendered = nunjucks.render('post.njk', templateProps);
-        const postDir = path.join(DIST_DIR, 'post', slug);
+        const postDir = path.join(DIST_DIR, 'posts', slug);
 
         await fs.mkdir(postDir, { recursive: true });
         await fs.writeFile(path.join(postDir, 'index.html'), rendered);

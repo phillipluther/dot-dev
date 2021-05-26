@@ -2,10 +2,27 @@
 
 {% block content %}
   <h2 class="archive-title">{{ title }}</h2>
+
+  <ul class="archive-list">
   {% for post in posts %}
-    <article class="archive-article">
-      <h3 class="article-title">{{ post.title }}</h3>
-      <p>{{ post.description }}</p>
-    </article>
+    <li class="archive-listItem">
+      <article class="archive-article">
+        <h3 class="article-title">
+          <a href="{{ post.url }}" class="article-titleLink">{{ post.title }}</a>
+        </h3>
+
+        {% if post.coverImage %}
+        <a href="{{ post.url }}" role="presentation">
+          <img src="{{ post.coverImage }}" class="article-image" alt="">
+        </a>
+        {% endif %}
+
+        <p>{{ post.date }}</p>
+        <p>{{ post.description }}</p>
+
+        <a href="{{ post.url }}" class="article-cta">Read more</a>
+      </article>
+    </li>
   {% endfor %}
+  </ul>
 {% endblock %}

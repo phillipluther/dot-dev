@@ -7,7 +7,7 @@ import remarkExtractFrontmatter from 'remark-extract-frontmatter';
 import yaml from 'yaml';
 import {
   POSTS_DIR,
-  BASE_URL,
+  POSTS_BASE_URL,
 } from './constants';
 
 export interface PostData {
@@ -37,7 +37,7 @@ async function getPostData(): Promise<PostData[]> {
         .use(remarkExtractFrontmatter, { yaml: yaml.parse })
         .processSync(markdownFileContents);
 
-      const { href: url, pathname: slug } = new URL(dir, BASE_URL);
+      const { href: url, pathname: slug } = new URL(dir, POSTS_BASE_URL);
       const {
         contents: content,
         data: {
