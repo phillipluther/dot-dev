@@ -1,16 +1,15 @@
 import fs from 'fs/promises';
 import path from 'path';
-import remark from 'remark';
-import remarkHtml from 'remark-html';
-import remarkFrontmatter from 'remark-frontmatter';
-import remarkExtractFrontmatter from 'remark-extract-frontmatter';
-import yaml from 'yaml';
+import { default as graymatter } from 'gray-matter';
+import marked from 'marked';
+import prism from 'prismjs';
+import loadLanguages from 'prismjs/components/';
 import {
-  POSTS_DIR,
+  POSTS_SRC_DIR,
   BASE_URL,
 } from './constants';
 
-export interface PostData {
+export interface PostMetadata {
   title: string;
   date: string;
   description?: string;
@@ -19,46 +18,61 @@ export interface PostData {
   tags?: string[];
 };
 
+export interface PostData {
+  metadata: PostMetadata;
+  markdown: string;
+  html: string;
+  assets: string[];
+};
+
 const timeHandle = 'Gathered post data';
+
+loadLanguages();
+
+marked.setOptions({
+  highlight: (code: string, lang: string) => {
+    if (prism.languages[lang]) {
+      return prism.highlight(code, prism.languages[lang], lang);
+    } else {
+      return code;
+    }
+  },
+});
 
 async function getPostData(): Promise<PostData[]> {
   try {
     console.time(timeHandle);
-    const postDirs: string[] = await fs.readdir(POSTS_DIR);
+    const postDirs: string[] = await fs.readdir(POSTS_SRC_DIR);
 
-    const promisedPostData = Promise.all(postDirs.map(async (dir) => {
-      const markdownFilePath = path.join(POSTS_DIR, `${dir}/index.md`);
-      const markdownFileContents = (await fs.readFile(markdownFilePath)).toString();
+    const postData = await Promise.all(postDirs.map(async (dirname) => {  
+      const dirPath = path.join(POSTS_SRC_DIR, dirname);
+      const dirContents = await fs.readdir(dirPath);
+      const mdFileContents = await fs.readFile(path.join(dirPath, 'index.md'), 'utf8');
+      // const assets = dirContents.filter((item) => !/\.md$/.test(item));
 
-      // TODO: what's the proper type definition for this?
-      const parsed: any = remark()
-        .use(remarkHtml)
-        .use(remarkFrontmatter)
-        .use(remarkExtractFrontmatter, { yaml: yaml.parse })
-        .processSync(markdownFileContents);
-
-      const { href: url, pathname: slug } = new URL(`posts/${dir}`, BASE_URL);
-      const {
-        contents: content,
-        data: {
-          title,
-          date,
-          ...frontmatter
-        }
-      } = parsed;
+      const { data, content: markdown } = graymatter(mdFileContents);
+      const { href: url, pathname: slug } = new URL(`posts/${dirname}`, BASE_URL);
 
       return {
-        title,
-        date,
-        slug,
-        url,
-        content,
-        ...frontmatter,
+        metadata: {
+          ...data as PostMetadata,
+          url,
+          slug,
+        },
+        markdown,
+        html: marked.parse(markdown),
+        assets: dirContents.reduce((postAssets, filename) => {
+          if (/\.md$/.test(filename) === false) {
+            postAssets.push(path.join(dirPath, filename));
+          }
+
+          return postAssets;
+        }, []),
       };
     }));
 
     console.timeEnd(timeHandle);
-    return promisedPostData;
+    return postData;
   } catch (err) {
     console.error(err);
   }
