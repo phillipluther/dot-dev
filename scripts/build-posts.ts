@@ -1,8 +1,12 @@
 import fs from 'fs/promises';
 import path from 'path';
 import nunjucks from 'nunjucks';
-import getPostData, { PostData, PostMetadata } from './get-post-data';
-import { TEMPLATES_DIR, POSTS_DIST_DIR } from './constants';
+import {
+  getPostData,
+  PostData,
+  TEMPLATES_DIR,
+  DIST_DIR,
+} from './utils';
 
 const timeHandle = 'Posts built';
 
@@ -25,7 +29,7 @@ async function buildPosts(): Promise<PostData[]> {
           ...templateProps,
           content: html,
         });
-        const postDir = path.join(POSTS_DIST_DIR, slug);
+        const postDir = path.join(DIST_DIR, slug);
 
         await fs.mkdir(postDir, { recursive: true });
         await fs.writeFile(path.join(postDir, 'index.html'), rendered);

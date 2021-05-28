@@ -1,9 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { default as graymatter } from 'gray-matter';
-import marked from 'marked';
-import prism from 'prismjs';
-import loadLanguages from 'prismjs/components/';
+import processMarkdown from './process-markdown';
 import {
   POSTS_SRC_DIR,
   BASE_URL,
@@ -27,18 +25,6 @@ export interface PostData {
 
 const timeHandle = 'Gathered post data';
 
-loadLanguages();
-
-marked.setOptions({
-  highlight: (code: string, lang: string) => {
-    if (prism.languages[lang]) {
-      return prism.highlight(code, prism.languages[lang], lang);
-    } else {
-      return code;
-    }
-  },
-});
-
 async function getPostData(): Promise<PostData[]> {
   try {
     console.time(timeHandle);
@@ -48,7 +34,6 @@ async function getPostData(): Promise<PostData[]> {
       const dirPath = path.join(POSTS_SRC_DIR, dirname);
       const dirContents = await fs.readdir(dirPath);
       const mdFileContents = await fs.readFile(path.join(dirPath, 'index.md'), 'utf8');
-      // const assets = dirContents.filter((item) => !/\.md$/.test(item));
 
       const { data, content: markdown } = graymatter(mdFileContents);
       const { href: url, pathname: slug } = new URL(`posts/${dirname}`, BASE_URL);
@@ -60,7 +45,7 @@ async function getPostData(): Promise<PostData[]> {
           slug,
         },
         markdown,
-        html: marked.parse(markdown),
+        html: processMarkdown(markdown, { baseUrl: BASE_URL }),
         assets: dirContents.reduce((postAssets, filename) => {
           if (/\.md$/.test(filename) === false) {
             postAssets.push(path.join(dirPath, filename));
