@@ -1,26 +1,39 @@
 {% extends 'base.njk' %}
 
 {% block content %}
-  <h2 class="archive-title">{{ title }}</h2>
+  <h2 class="archive__title">{{ title }}</h2>
 
-  <ul class="archive-list">
+  <ul class="archive__list">
   {%- for post in posts %}
-    <li class="archive-listItem">
-      <article class="archive-article">
-        <h3 class="article-title">
-          <a href="{{ post.url }}" class="article-titleLink">{{ post.title }}</a>
-        </h3>
+    <li class="archive__listItem">
+      <article class="archive__article">
+        <header class="archive__articleHeader">
+          <h3 class="archive__articleTitle">
+            <a href="{{ post.url }}" class="archive__articlTitleLink">{{ post.title }}</a>
+          </h3>
+          <time datetime="{{ post.date|simpleDate }}">{{ post.date|friendlyDate }}</time>
+        </header>
 
-        {%- if post.coverImage %}
-        <a href="{{ post.url }}" role="presentation">
-          <img src="{{ post.coverImage }}" class="article-image" alt="">
-        </a>
-        {%- endif %}
+        <section class="archive__articleBody">
+          <p>{{ post.description }}</p>
 
-        <p>{{ post.date|date }}</p>
-        <p>{{ post.description }}</p>
+          {%- if post.coverImage %}
+          <a href="{{ post.url }}" role="presentation">
+            <img src="{{ post.coverImage }}" class="article-image" alt="">
+          </a>
+          {%- endif %}
+        </section>
 
-        <a href="{{ post.url }}" class="article-cta">Read more</a>
+        <footer class="archive__articleFooter">
+          <p><a href="{{ post.url }}" class="article-cta">Read more</a></p>
+          <ul class="archive__tagList">
+          {%- for tag in post.tags %}
+            <li class="archive__tag">
+              <a href="/{{ tag|tag }}" class="archive__tagLink">{{ tag }}</a>
+            </li>
+          {%- endfor %}
+          </ul>
+        </footer>
       </article>
     </li>
   {%- endfor %}
