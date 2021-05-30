@@ -1,23 +1,21 @@
 import fs from 'fs/promises';
 import path from 'path';
-import nunjucks from 'nunjucks';
 import dashify from 'dashify';
-import getPostData, { PostData } from './get-post-data';
-import { TEMPLATES_DIR, DIST_DIR } from './constants';
+import {
+  applyTemplate,
+  getPostData,
+  DIST_DIR,
+} from './utils';
 
 const timeHandle = 'Archives built';
 
-async function buildArchives(): Promise<PostData[]> {
+async function buildArchives(): Promise<void> {
   try {
     console.time(timeHandle);
     
-    nunjucks.configure(TEMPLATES_DIR, {
-      autoescape: true,
-    });
-    
     const allPostData = await getPostData();
     const allTagData: object = allPostData.reduce((tagData, postData) => {
-      const { tags } = postData;
+      const { tags } = postData.metadata;
 
       tags.forEach((tag) => {
         const dashifiedTag = dashify(tag);
@@ -30,26 +28,27 @@ async function buildArchives(): Promise<PostData[]> {
           };
         }
 
-        tagData[dashifiedTag].posts.push(postData);
+        tagData[dashifiedTag].posts.push(postData.metadata);
       });
 
       return tagData;
     }, {});
 
-    const promisedArchives = Promise.all(Object.keys(allTagData).map(async (tag) => {
+    await Promise.all(Object.keys(allTagData).map((tag) => {
       try {
-        const rendered = nunjucks.render('archive.njk', allTagData[tag]);
+        const rendered = applyTemplate('archive.njk', allTagData[tag]);
         const archiveDir = path.join(DIST_DIR, tag);
 
-        await fs.mkdir(archiveDir, { recursive: true });
-        await fs.writeFile(path.join(archiveDir, 'index.html'), rendered);
+        return fs.mkdir(archiveDir, { recursive: true })
+          .then(() => {
+            fs.writeFile(path.join(archiveDir, 'index.html'), rendered);
+          });
       } catch (writeError) {
         console.error(writeError);
       }
     }));
 
     console.timeEnd(timeHandle);
-    return {} as any;
   } catch (err) {
     console.error(err);
   }

@@ -7,6 +7,8 @@ export const TEMPLATES_SRC_DIR = path.join(SRC_DIR, 'templates');
 export const BASE_URL = 'https://principledengineer.com';
 export const DIST_DIR = path.resolve('dist');
 
+export const DATE_FORMAT = 'MMMM D, YYYY';
+
 export const IMAGE_SIZES = {
   thumb: {
     width: 96,

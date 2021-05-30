@@ -1,6 +1,6 @@
 {% extends 'base.njk' %}
 
-{%- block content %}
+{% block content %}
   <h2 class="archive-title">{{ title }}</h2>
 
   <ul class="archive-list">
@@ -15,14 +15,14 @@
         <a href="{{ post.url }}" role="presentation">
           <img src="{{ post.coverImage }}" class="article-image" alt="">
         </a>
-        {% endif -%}
+        {%- endif %}
 
-        <p>{{ post.date }}</p>
+        <p>{{ post.date|date }}</p>
         <p>{{ post.description }}</p>
 
         <a href="{{ post.url }}" class="article-cta">Read more</a>
       </article>
     </li>
-  {% endfor -%}
+  {%- endfor %}
   </ul>
 {%- endblock %}
