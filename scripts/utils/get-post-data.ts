@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { default as graymatter } from 'gray-matter';
 import processMarkdown from './process-markdown';
+import { getImageSrcset } from './process-image';
 import {
   POSTS_SRC_DIR,
   BASE_URL,
@@ -37,6 +38,11 @@ async function getPostData(): Promise<PostData[]> {
 
       const { data, content: markdown } = graymatter(mdFileContents);
       const { href: url, pathname: slug } = new URL(`posts/${dirname}`, BASE_URL);
+
+      // ensure we update the cover image (which will be processed)
+      if (data.coverImage) {
+        data.coverImage = path.join('/posts', dirname, path.basename(data.coverImage));
+      }
 
       return {
         metadata: {

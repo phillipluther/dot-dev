@@ -27,7 +27,7 @@ marked.use({
 
       return `
         <div class="custom-image">
-          <img src="${path.basename(href)}" alt="${alt}" srcset="${imageSources.join(', ')}>
+          <img src="${path.basename(href)}" alt="${alt}" srcset="${imageSources.join(', ')}">
         </div>
       `;
     },
