@@ -34,7 +34,7 @@ async function buildPosts(): Promise<PostData[]> {
 
         await fs.mkdir(postDir, { recursive: true });
         await fs.writeFile(path.join(postDir, 'index.html'), rendered);
-        await Promise.all(assets.map((assetSrc) => processImage(assetSrc, postDir)));
+        await Promise.all(assets.map((assetSrc) => processImage(assetSrc)));
 
         return postData;
       } catch (writeError) {

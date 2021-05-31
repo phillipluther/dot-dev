@@ -2,8 +2,7 @@ import path from 'path';
 import marked from 'marked';
 import prism from 'prismjs';
 import loadLanguages from 'prismjs/components/';
-import { IMAGE_SIZES } from './constants';
-import { getImageName, getImageExtension } from './process-image';
+import { getImageSourceAttrs } from './process-image';
 
 loadLanguages();
 
@@ -20,16 +19,19 @@ marked.setOptions({
 marked.use({
   renderer: {
     image(href, title, alt) {
-      const extension = getImageExtension(href);
-      const imageSources = Object.keys(IMAGE_SIZES).map(
-        (size) => `${getImageName(href, size, extension)} ${IMAGE_SIZES[size].width}w`,
-      );
+      const srcPath = path.resolve(href);
+      const imageAttrs = [getImageSourceAttrs(srcPath)];
+      
+      if (title) {
+        imageAttrs.push(`title="${title}"`);
+      }
 
-      return `
-        <div class="custom-image">
-          <img src="${path.basename(href)}" alt="${alt}" srcset="${imageSources.join(', ')}">
-        </div>
-      `;
+      if (alt) {
+        imageAttrs.push(`alt="${alt}"`);
+      }
+
+      console.log('IMAGE ATTRS', imageAttrs);
+      return `<img ${imageAttrs.join(' ')}>`;
     },
   },
 });

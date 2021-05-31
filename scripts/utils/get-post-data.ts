@@ -2,7 +2,6 @@ import fs from 'fs/promises';
 import path from 'path';
 import { default as graymatter } from 'gray-matter';
 import processMarkdown from './process-markdown';
-import { getImageSrcset } from './process-image';
 import {
   POSTS_SRC_DIR,
   BASE_URL,

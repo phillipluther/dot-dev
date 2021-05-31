@@ -1,12 +1,11 @@
 import path from 'path';
-import fs from 'fs/promises';
 import sharp from 'sharp';
-import { IMAGE_SIZES, SUPPORTED_IMAGE_TYPES, DIST_DIR } from './constants';
+import { IMAGE_SIZES, SUPPORTED_IMAGE_TYPES, SRC_DIR, DIST_DIR } from './constants';
 
-// cache of processed image sizes for use in srcsets, organized by path
-const imageSizeMap = {};
+// cache of processed image names for use in srcsets, organized by source path
+const processedImages = {};
 
-export function getImageExtension(imgPath: string): string {
+function getImageExtension(imgPath: string): string {
   return SUPPORTED_IMAGE_TYPES.reduce((ext, supportedExtension) => {
     const extensionExp = new RegExp(`\\${supportedExtension}$`);
     if (extensionExp.test(imgPath)) {
@@ -17,66 +16,56 @@ export function getImageExtension(imgPath: string): string {
   }, '');
 }
 
-export function getImageName(imgPath: string, size: string, ext?: string): string {
-  const { width, height } = IMAGE_SIZES[size];
-  const sizeHash = `-${width}x${height}`;
-  const extension = ext || getImageExtension(imgPath);
-  const basename = path.basename(imgPath, extension);
+export function getImageSourceAttrs(srcPath: string): string {
+  const processed = processedImages[srcPath];
 
-  return [basename, sizeHash, extension].join('');
-}
-
-export function getImageSrcset(slug: string): string[] {
-  const imageSrcset = imageSizeMap[slug] || [];
-
-  if (!imageSrcset) {
-    console.warn(`[WARNING] No srcset found for ${slug}`);
+  // nothing to do here ... doesn't look like the image has been processed at all
+  if (!processed) {
+    return `src="${srcPath}"`;
   }
 
-  return imageSrcset;
+  const sources = Object.keys(processed).reduce((sourceSets, size) => {
+    const { width } = IMAGE_SIZES[size];
+    
+    sourceSets.push(`${processed[size]} ${width}w`);
+    return sourceSets;
+  }, []);
+
+  return `src="${processed.lg}" srcset="${sources.join(', ')}"`;
 }
 
-function getRelativeUrlFromPath(path: string): string {
-  return path.replace(DIST_DIR, '');
-}
-
-export async function processImage(srcPath: string, destDir: string): Promise<string[]> {
+export async function processImage(srcPath: string): Promise<void> {
   try {
-    const processedImages = imageSizeMap[srcPath] || {};
+    const processed = processedImages[srcPath] || {};
 
     // if the image has already been processed, just return paths/srcset
-    if (processedImages.length > 0) {
-      return processedImages;
+    if (Object.keys(processed).length > 0) {
+      return processed;
     }
 
-    const sizeKeys = Object.keys(IMAGE_SIZES);
-    const extension = getImageExtension(srcPath);
-    const rawImagePath = path.join(destDir, path.basename(srcPath));
-
-    processedImages.raw = getRelativeUrlFromPath(rawImagePath);
-    await fs.copyFile(srcPath, rawImagePath);
+    const filename = path.basename(srcPath);
+    const extension = getImageExtension(filename);
+    const hash = filename.replace(extension, '');
+    const slug = srcPath.replace(SRC_DIR, '');
+    const destDir = path.join(DIST_DIR, path.dirname(slug));
 
     if (extension === '') {
       console.warn(`[WARNING] ${srcPath} appears to be an unsupported image type`);
     } else {
-      const imageName = path.basename(srcPath, extension);
-
-      await Promise.all(sizeKeys.map((size) => {
+      await Promise.all(Object.keys(IMAGE_SIZES).map((size) => {
         const { width, height } = IMAGE_SIZES[size];
-        const processedImageName = getImageName(srcPath, size, extension);
-        const processedImagePath = path.join(destDir, processedImageName);
+        const processedName = `${hash}-${width}x${height}${extension}`;
+        const processedPath = path.join(destDir, processedName);
 
-        processedImages[size] = getRelativeUrlFromPath(processedImagePath);
+        processed[size] = processedPath.replace(DIST_DIR, '');
 
         return sharp(srcPath)
           .resize(width, height)
-          .toFile(processedImagePath);
+          .toFile(processedPath);
       }));
     }
 
-    imageSizeMap[srcPath] = processedImages;
-
-    return processedImages;
+    processedImages[srcPath] = processed;
   } catch (err) {
     console.error(err);
   }
