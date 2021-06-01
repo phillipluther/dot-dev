@@ -1,71 +1,96 @@
 import path from 'path';
 import sharp from 'sharp';
-import { IMAGE_SIZES, SUPPORTED_IMAGE_TYPES, SRC_DIR, DIST_DIR } from './constants';
+import {
+  BREAKPOINTS,
+  IMAGE_SIZES,
+  SUPPORTED_IMAGE_TYPES,
+  SRC_DIR,
+  DIST_DIR
+} from './constants';
 
-// cache of processed image names for use in srcsets, organized by source path
-const processedImages = {};
+// TODO: can you dynamically build enums in TS? would be nice to just snag the keys
+// from IMAGE_SIZES (and something similar for SUPPORTED_IMAGE_TYPES!)
+enum ImageSize {
+  thumb = 'thumb',
+  sm = 'sm',
+  md = 'md',
+  lg = 'lg',
+};
 
-function getImageExtension(imgPath: string): string {
-  return SUPPORTED_IMAGE_TYPES.reduce((ext, supportedExtension) => {
-    const extensionExp = new RegExp(`\\${supportedExtension}$`);
-    if (extensionExp.test(imgPath)) {
-      ext = supportedExtension;
-    }
-
-    return ext;
-  }, '');
+export interface ProcessedImageDetails {
+  name: string;
+  size: ImageSize;
+  width: number;
+  height: number;
 }
 
-export function getImageSourceAttrs(srcPath: string): string {
-  const processed = processedImages[srcPath];
+function isValidImage(imgPath: string): boolean {
+  return SUPPORTED_IMAGE_TYPES.includes(path.extname(imgPath));
+}
 
-  // nothing to do here ... doesn't look like the image has been processed at all
-  if (!processed) {
+function getProcessedImageDetails(imagePath: string, size: ImageSize): ProcessedImageDetails {
+  const { width, height } = IMAGE_SIZES[size];
+  const extension = path.extname(imagePath);
+  const imageName = path.basename(imagePath, extension);
+
+  return {
+    name: `${imageName}-${width}x${height}${extension}`,
+    width,
+    height,
+    size,
+  };
+}
+
+export function getResponsiveImageAttrs(srcPath: string): string {
+  // not a supported image type so it was never processed; just return a simple src
+  if (!isValidImage(srcPath)) {
     return `src="${srcPath}"`;
   }
 
-  const sources = Object.keys(processed).reduce((sourceSets, size) => {
-    const { width } = IMAGE_SIZES[size];
-    
-    sourceSets.push(`${processed[size]} ${width}w`);
-    return sourceSets;
-  }, []);
+  const basePath = path.dirname(srcPath);
+  const filename = path.basename(srcPath);
 
-  return `src="${processed.lg}" srcset="${sources.join(', ')}"`;
+  const sourceSet = [];
+  const sizes = [];
+  // we'll use the large image size as the default `src` attribute
+  let fallbackSrc: string;
+
+  // don't bother grabbing the thumbnail size since 'tis too small for practical use
+  ['sm', 'md', 'lg'].forEach((size) => {
+    const { name, width } = getProcessedImageDetails(filename, size as ImageSize);
+    const imagePath = path.join(basePath, name);
+
+    sourceSet.push(`${imagePath} ${width}w`);
+    
+    if (size === 'lg') {
+      fallbackSrc = imagePath;
+      sizes.push(`${BREAKPOINTS.md}`);
+    } else {
+      sizes.push(`(max-width: ${BREAKPOINTS[size]}) ${width}px`);
+    }
+  });
+
+  return `src="${fallbackSrc}" srcset="${sourceSet.join(', ')}" sizes="${sizes.join(', ')}"`;
 }
 
 export async function processImage(srcPath: string): Promise<void> {
   try {
-    const processed = processedImages[srcPath] || {};
-
-    // if the image has already been processed, just return paths/srcset
-    if (Object.keys(processed).length > 0) {
-      return processed;
+    if (!isValidImage(srcPath)) {
+      console.warn(`[WARNING] ${srcPath} appears to be an unsupported image type`);
+      return;
     }
 
-    const filename = path.basename(srcPath);
-    const extension = getImageExtension(filename);
-    const hash = filename.replace(extension, '');
     const slug = srcPath.replace(SRC_DIR, '');
     const destDir = path.join(DIST_DIR, path.dirname(slug));
 
-    if (extension === '') {
-      console.warn(`[WARNING] ${srcPath} appears to be an unsupported image type`);
-    } else {
-      await Promise.all(Object.keys(IMAGE_SIZES).map((size) => {
-        const { width, height } = IMAGE_SIZES[size];
-        const processedName = `${hash}-${width}x${height}${extension}`;
-        const processedPath = path.join(destDir, processedName);
+    await Promise.all(Object.keys(IMAGE_SIZES).map((size) => {
+      const { name, width, height } = getProcessedImageDetails(srcPath, size as ImageSize);
+      const processedPath = path.join(destDir, name);
 
-        processed[size] = processedPath.replace(DIST_DIR, '');
-
-        return sharp(srcPath)
-          .resize(width, height)
-          .toFile(processedPath);
-      }));
-    }
-
-    processedImages[srcPath] = processed;
+      return sharp(srcPath)
+        .resize(width, height)
+        .toFile(processedPath);
+    }));
   } catch (err) {
     console.error(err);
   }

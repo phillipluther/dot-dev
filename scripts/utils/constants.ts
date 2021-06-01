@@ -28,4 +28,9 @@ export const IMAGE_SIZES = {
   },
 };
 
-export const SUPPORTED_IMAGE_TYPES = ['.jpg', '.png', '.gif'];
+export const BREAKPOINTS = {
+  sm: '600px',
+  md: '900px',
+};
+
+export const SUPPORTED_IMAGE_TYPES = ['.jpg', '.jpeg', '.png', '.gif'];

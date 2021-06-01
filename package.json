@@ -36,6 +36,6 @@
     "build": "ts-node scripts/build.ts",
     "xpostbuild": "cp -r static/* dist",
     "preserve": "npm run build",
-    "serve": "browser-sync start -s 'dist' -f 'dist' --open false"
+    "serve": "browser-sync start -s 'dist' -f 'dist' --open"
   }
 }

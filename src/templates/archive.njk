@@ -9,7 +9,7 @@
       <article class="archive__article">
         <header class="archive__articleHeader">
           <h3 class="archive__articleTitle">
-            <a href="{{ post.url }}" class="archive__articlTitleLink">{{ post.title }}</a>
+            <a href="{{ post.slug }}" class="archive__articlTitleLink">{{ post.title }}</a>
           </h3>
           <time datetime="{{ post.date|simpleDate }}">{{ post.date|friendlyDate }}</time>
         </header>
@@ -18,14 +18,14 @@
           <p>{{ post.description }}</p>
 
           {%- if post.coverImage %}
-          <a href="{{ post.url }}" role="presentation">
-            <img src="{{ post.coverImage }}" class="article-image" alt="">
+          <a href="{{ post.slug }}" role="presentation">
+            <img {{ post.coverImageSrc|safe }} class="article-image" alt="" loading="lazy">
           </a>
           {%- endif %}
         </section>
 
         <footer class="archive__articleFooter">
-          <p><a href="{{ post.url }}" class="article-cta">Read more</a></p>
+          <p><a href="{{ post.slug }}" class="article-cta">Read more</a></p>
           <ul class="archive__tagList">
           {%- for tag in post.tags %}
             <li class="archive__tag">

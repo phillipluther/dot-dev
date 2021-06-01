@@ -2,7 +2,7 @@ import path from 'path';
 import marked from 'marked';
 import prism from 'prismjs';
 import loadLanguages from 'prismjs/components/';
-import { getImageSourceAttrs } from './process-image';
+import { getResponsiveImageAttrs } from './process-image';
 
 loadLanguages();
 
@@ -19,9 +19,9 @@ marked.setOptions({
 marked.use({
   renderer: {
     image(href, title, alt) {
-      const srcPath = path.resolve(href);
-      const imageAttrs = [getImageSourceAttrs(srcPath)];
-      
+      const sourceAttrs = getResponsiveImageAttrs(href) || `src="${href}"`;
+      const imageAttrs = [sourceAttrs];
+
       if (title) {
         imageAttrs.push(`title="${title}"`);
       }
@@ -30,8 +30,7 @@ marked.use({
         imageAttrs.push(`alt="${alt}"`);
       }
 
-      console.log('IMAGE ATTRS', imageAttrs);
-      return `<img ${imageAttrs.join(' ')}>`;
+      return `<img ${imageAttrs.join(' ')} loading="lazy">`;
     },
   },
 });
@@ -42,4 +41,5 @@ marked.Renderer.prototype.paragraph = (mdSnippet) => mdSnippet.startsWith('<img'
   ? `<div class="processed-md-image">${mdSnippet}</div>\n`
   : `<p>${mdSnippet}</p>`;
 
-export default (md: string, options: object): string => marked.parse(md, options = {});
+export default (md: string, slug: string, options?: object): string => 
+  marked.parse(md, options = {});

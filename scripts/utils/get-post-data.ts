@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { default as graymatter } from 'gray-matter';
+import { getResponsiveImageAttrs } from './process-image';
 import processMarkdown from './process-markdown';
 import {
   POSTS_SRC_DIR,
@@ -38,9 +39,9 @@ async function getPostData(): Promise<PostData[]> {
       const { data, content: markdown } = graymatter(mdFileContents);
       const { href: url, pathname: slug } = new URL(`posts/${dirname}`, BASE_URL);
 
-      // ensure we update the cover image (which will be processed)
+      // ensure we update the processed cover image source
       if (data.coverImage) {
-        data.coverImage = path.join('/posts', dirname, path.basename(data.coverImage));
+        data.coverImageSrc = getResponsiveImageAttrs(path.join('/posts', dirname, data.coverImage));
       }
 
       return {
@@ -50,7 +51,7 @@ async function getPostData(): Promise<PostData[]> {
           slug,
         },
         markdown,
-        html: processMarkdown(markdown, { baseUrl: BASE_URL }),
+        html: processMarkdown(markdown, slug, { baseUrl: BASE_URL }),
         assets: dirContents.reduce((postAssets, filename) => {
           if (/\.md$/.test(filename) === false) {
             postAssets.push(path.join(dirPath, filename));
