@@ -11,7 +11,7 @@ nunjucksEnv.addFilter('friendlyDate', (date: string): string => dayjs(date).form
 nunjucksEnv.addFilter('simpleDate', (date: string): string => dayjs(date).format('YYYY-MM-DD'));
 nunjucksEnv.addFilter('tag', (tag: string): string => `/tags/${dashify(tag)}`);
 
-function applyTemplate(templatePath: string, data: object): string {
+function applyTemplate(templatePath: string, data: object = {}): string {
   return nunjucksEnv.render(templatePath, data);
 }
 

@@ -6,11 +6,11 @@
 
 <head>
   <meta charset="utf-8">
-  <title>{{ title }}</title>
+  <title>{{ title }} | The Principled Engineer</title>
   <meta name="description" content="{{ description }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta property="og:title" content="{{ title }}">
+  <meta property="og:title" content="{{ title }} | The Principled Engineer">
   <meta property="og:type" content="{{ ogType|default('website') }}">
   <meta property="og:url" content="{{ url }}">
   <meta property="og:image" content="{{ ogImage|default('images/principled-engineer-ogimage.png') }}">
@@ -39,6 +39,9 @@
   <main class="content">
     {{ content|safe }}
   </main>
+  {%- endblock %}
+
+  {%- block subcontent %}
   {%- endblock %}
 
   <footer class="footer">
