@@ -32,9 +32,9 @@
   },
   "scripts": {
     "clean": "rm -rf dist",
-    "xprebuild": "npm run clean",
+    "prebuild": "npm run clean",
     "build": "ts-node scripts/build.ts",
-    "xpostbuild": "cp -r static/* dist",
+    "postbuild": "cp -r static/* dist",
     "preserve": "npm run build",
     "serve": "browser-sync start -s 'dist' -f 'dist' --open"
   }

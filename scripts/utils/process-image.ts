@@ -73,15 +73,12 @@ export function getResponsiveImageAttrs(srcPath: string): string {
   return `src="${fallbackSrc}" srcset="${sourceSet.join(', ')}" sizes="${sizes.join(', ')}"`;
 }
 
-export async function processImage(srcPath: string): Promise<void> {
+export async function processImage(srcPath: string, destDir: string): Promise<void> {
   try {
     if (!isValidImage(srcPath)) {
       console.warn(`[WARNING] ${srcPath} appears to be an unsupported image type`);
       return;
     }
-
-    const slug = srcPath.replace(SRC_DIR, '');
-    const destDir = path.join(DIST_DIR, path.dirname(slug));
 
     await Promise.all(Object.keys(IMAGE_SIZES).map((size) => {
       const { name, width, height } = getProcessedImageDetails(srcPath, size as ImageSize);

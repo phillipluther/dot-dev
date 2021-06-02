@@ -1,3 +1,6 @@
+{%- from './macros/primary-nav.njk' import primaryNav -%}
+{%- from './macros/branding.njk' import branding -%}
+
 <!doctype html>
 <html lang="en">
 
@@ -19,9 +22,41 @@
 </head>
 
 <body>
-  {% block content %}
-    {{ content|safe }}  
-  {% endblock %}
+  <header class="header">
+  {%- if isHome %}
+    <h1 class="header__title">{{ branding() }}</h1>
+  {%- else %}
+    <p class="header__title">{{ branding() }}</p>
+  {%- endif %}
+
+    <nav class="header__nav">
+    {{ primaryNav() }}
+    </nav>
+  </header>
+
+  <a name="top"></a>
+  {%- block content %}
+  <main class="content">
+    {{ content|safe }}
+  </main>
+  {%- endblock %}
+
+  <footer class="footer">
+    <section class="footer__section">
+      <h2 class="sr">Supplemental Navigation</h2>
+      <nav class="footer__nav">
+        <p class="footer__backToTop">
+          <a href="#top" class="backToTop">Back to Top</a>
+        </p>
+        {{ primaryNav() }}
+      </nav>
+    </section>
+    <section class="footer__section footer__disclaimers">
+      <h2 class="sr">Legal Notices and Disclaimers</h2>
+      <p>Site content is Copyright &copy; 2021 by Phillip Luther unless otherwise specified.</p>
+      <p>All opinions expressed on <a href="/">principledengineer.com</a> belong to me, Phillip Luther, and do not necessarilly reflect the views of any associated organizations or corporate entities.</p>
+    </section>
+  </footer>
 </body>
 
 </html>

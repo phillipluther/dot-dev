@@ -10,9 +10,13 @@ const nunjucksEnv = nunjucks.configure(TEMPLATES_SRC_DIR, {
 
 nunjucksEnv.addFilter('friendlyDate', (date: string): string => dayjs(date).format(DATE_FORMAT));
 nunjucksEnv.addFilter('simpleDate', (date: string): string => dayjs(date).format('YYYY-MM-DD'));
-nunjucksEnv.addFilter('tag', (tag: string): string => dashify(tag));
+nunjucksEnv.addFilter('tag', (tag: string): string => `/tags/${dashify(tag)}`);
 
-function applyTemplate(templatePath: string, data: PostMetadata): string {
+interface TemplateData extends PostMetadata {
+  content: string;
+}
+
+function applyTemplate(templatePath: string, data: TemplateData): string {
   return nunjucksEnv.render(templatePath, data);
 }
 

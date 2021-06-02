@@ -7,3 +7,16 @@
   <meta property="article:published_time" content="{{ date }}">
   <meta property="article:tag" content="{{ tags }}">
 {% endblock %}
+
+{% block content %}
+  <article class="post">
+    <header class="post__header">
+      <h1 class="post__title">{{ title }}</h1>
+      <time datetime="{{ date|simpleDate }}">{{ date|friendlyDate }}</time>
+      <p class="post__summary">{{ description }}</p>
+    </header>
+    <section class="post__content">
+      {{ content|safe }}
+    </section>
+  </article>
+{% endblock %}

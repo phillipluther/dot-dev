@@ -1,11 +1,10 @@
 import fs from 'fs/promises';
 import path from 'path';
-import nunjucks from 'nunjucks';
 import {
+  applyTemplate,
   processImage,
   getPostData,
   PostData,
-  TEMPLATES_SRC_DIR,
   DIST_DIR,
 } from './utils';
 
@@ -16,17 +15,13 @@ async function buildPosts(): Promise<PostData[]> {
     console.time(timeHandle);
     const postData = await getPostData();
 
-    nunjucks.configure(TEMPLATES_SRC_DIR, {
-      autoescape: true,
-    });
-
     await Promise.all(postData.map(async (post: PostData) => {
       try {
         const { html, metadata, assets } = post;
 
         // render the post HTML from our template
         const { slug, ...templateProps } = metadata;
-        const rendered = nunjucks.render('post.njk', {
+        const rendered = applyTemplate('post.njk', {
           ...templateProps,
           content: html,
         });
@@ -34,7 +29,7 @@ async function buildPosts(): Promise<PostData[]> {
 
         await fs.mkdir(postDir, { recursive: true });
         await fs.writeFile(path.join(postDir, 'index.html'), rendered);
-        await Promise.all(assets.map((assetSrc) => processImage(assetSrc)));
+        await Promise.all(assets.map((assetSrc) => processImage(assetSrc, postDir)));
 
         return postData;
       } catch (writeError) {

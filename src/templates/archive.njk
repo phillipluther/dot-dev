@@ -1,8 +1,12 @@
 {% extends 'base.njk' %}
 
 {% block content %}
-  <h2 class="archive__title">{{ title }}</h2>
+  <h1 class="archive__title">{{ title }}</h1>
+  {%- if description %}
+  <p class="archive__summary">{{ description }}</p>
+  {%- endif %}
 
+  <h2 class="sr">Blog Posts about {{ title }}</h2>
   <ul class="archive__list">
   {%- for post in posts %}
     <li class="archive__listItem">

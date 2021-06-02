@@ -9,7 +9,7 @@ import {
 
 const timeHandle = 'Archives built';
 
-async function buildArchives(): Promise<void> {
+async function buildTagArchives(): Promise<void> {
   try {
     console.time(timeHandle);
     
@@ -37,7 +37,7 @@ async function buildArchives(): Promise<void> {
     await Promise.all(Object.keys(allTagData).map((tag) => {
       try {
         const rendered = applyTemplate('archive.njk', allTagData[tag]);
-        const archiveDir = path.join(DIST_DIR, tag);
+        const archiveDir = path.join(DIST_DIR, '/tags', tag);
 
         return fs.mkdir(archiveDir, { recursive: true })
           .then(() => {
@@ -54,4 +54,4 @@ async function buildArchives(): Promise<void> {
   }
 }
 
-export default buildArchives;
+export default buildTagArchives;
