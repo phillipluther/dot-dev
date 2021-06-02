@@ -8,6 +8,7 @@ export const BASE_URL = 'https://principledengineer.com';
 export const DIST_DIR = path.resolve('dist');
 
 export const DATE_FORMAT = 'MMMM D, YYYY';
+export const POSTS_PER_PAGE = 24;
 
 export const IMAGE_SIZES = {
   thumb: {

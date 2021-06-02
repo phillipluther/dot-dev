@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
+import dayjs from 'dayjs';
 import { default as graymatter } from 'gray-matter';
 import { getResponsiveImageAttrs } from './process-image';
 import processMarkdown from './process-markdown';
@@ -69,11 +70,33 @@ async function getPostData(): Promise<PostData[]> {
   }
 }
 
-let postData: PostData[]|Promise<PostData[]>;
-export default () => {
-  if (!postData) {
-    postData = getPostData();
+// cached results of reading/indexing all post markdown files
+let cachedPostData: PostData[];
+let toResolve: Promise<PostData[]>;
+
+export default async function fetchPostData() {
+  if (cachedPostData) {
+    return cachedPostData.slice();
+
+  } else if (toResolve) {
+    // pending promise; just wait for it ...
+    await toResolve;
+    // ... and now our cached results should be there
+    return cachedPostData.slice();
   }
 
-  return postData;
+  toResolve = getPostData()
+    .then((postData) => {
+      const sortedPostData = postData.sort((a, b) => {
+        const { metadata: { date: firstDate }} = a;
+        const { metadata: { date: secondDate }} = b;
+
+        return dayjs(firstDate) > dayjs(secondDate) ? -1 : 1;
+      });
+
+      cachedPostData = sortedPostData;
+      return cachedPostData.slice();
+    });
+
+  return await toResolve;
 }
