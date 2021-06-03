@@ -16,6 +16,7 @@ export interface PostMetadata {
   coverImage?: string;
   slug?: string;
   tags?: string[];
+  url?: string;
 };
 
 export interface PostData {
