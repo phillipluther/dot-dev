@@ -74,7 +74,7 @@ async function getPostData(): Promise<PostData[]> {
 let cachedPostData: PostData[];
 let toResolve: Promise<PostData[]>;
 
-export default async function fetchPostData() {
+export default async function fetchPostData(): Promise<PostData[]> {
   if (cachedPostData) {
     return cachedPostData.slice();
 
