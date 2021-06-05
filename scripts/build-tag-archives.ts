@@ -1,10 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
-import dashify from 'dashify';
+import { addToSitemap } from './build-sitemap';
 import {
   applyTemplate,
   getPostsByTag,
   tagNameMap,
+  BASE_URL,
   DIST_DIR,
 } from './utils';
 
@@ -23,10 +24,15 @@ async function buildTagArchives(): Promise<void> {
           description: `Posts from The Principled Engineer about ${tagName.toLowerCase()}`,
           posts: postsByTag[tag].map(({ metadata }) => metadata),
         });
-        const archiveDir = path.join(DIST_DIR, '/tags', tag);
+        const archiveSlug = path.join('tags', tag);
+        const archiveDir = path.join(DIST_DIR, archiveSlug);
+        const archiveIndex = path.join(archiveDir, 'index.html');
 
         await fs.mkdir(archiveDir, { recursive: true });
-        await fs.writeFile(path.join(archiveDir, 'index.html'), rendered);
+        await fs.writeFile(archiveIndex, rendered);
+
+        const { href: archiveUrl } = new URL(archiveSlug, BASE_URL);
+        addToSitemap(archiveUrl);
       } catch (writeErr) {
         console.error(writeErr);
       }

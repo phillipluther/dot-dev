@@ -1,8 +1,10 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { addToSitemap } from './build-sitemap';
 import {
   applyTemplate,
   getPostData,
+  BASE_URL,
   DIST_DIR,
   POSTS_PER_PAGE,
 } from './utils';
@@ -49,11 +51,15 @@ export default async function buildIndex(): Promise<void> {
         },
       });
 
-      const destDir = isPageOne ? DIST_DIR : path.join(DIST_DIR, `posts/page/${currentPage}`);
+      const destSlug = `posts/page/${currentPage}`;
+      const destDir = isPageOne ? DIST_DIR : path.join(DIST_DIR, destSlug);
 
       buildTasks.push(
         fs.mkdir(destDir, { recursive: true })
-          .then(() => { fs.writeFile(path.join(destDir, 'index.html'), rendered); })
+          .then(() => {
+            fs.writeFile(path.join(destDir, 'index.html'), rendered);
+            addToSitemap(isPageOne ? BASE_URL : destSlug);
+          })
       );
 
       currentPage++;

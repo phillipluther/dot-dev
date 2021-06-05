@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { addToSitemap } from './build-sitemap';
 import {
   applyTemplate,
   processImage,
@@ -30,6 +31,8 @@ async function buildPosts(): Promise<PostData[]> {
         await fs.mkdir(postDir, { recursive: true });
         await fs.writeFile(path.join(postDir, 'index.html'), rendered);
         await Promise.all(assets.map((assetSrc) => processImage(assetSrc, postDir)));
+
+        addToSitemap(metadata.url);
 
         return postData;
       } catch (writeError) {
