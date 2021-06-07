@@ -3,6 +3,7 @@ import path from 'path';
 export const SRC_DIR = path.resolve('src');
 export const POSTS_SRC_DIR = path.join(SRC_DIR, 'posts');
 export const TEMPLATES_SRC_DIR = path.join(SRC_DIR, 'templates');
+export const STYLES_SRC_DIR = path.join(SRC_DIR, 'styles');
 
 export const BASE_URL = 'https://principledengineer.com';
 export const DIST_DIR = path.resolve('dist');

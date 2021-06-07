@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "author": "Phillip Luther <dev@phillipluther.com>",
   "dependencies": {
+    "@types/clean-css": "^4.2.4",
     "@types/dashify": "^1.0.0",
     "@types/marked": "^2.0.3",
     "@types/node": "^15.3.0",
@@ -12,6 +13,7 @@
     "@types/prismjs": "^1.16.5",
     "@types/sharp": "^0.28.2",
     "browser-sync": "^2.26.14",
+    "clean-css": "^5.1.2",
     "dashify": "^2.0.0",
     "dayjs": "^1.10.5",
     "gray-matter": "^4.0.3",
@@ -37,6 +39,6 @@
     "build": "ts-node scripts/build.ts",
     "postbuild": "cp -r static/* dist",
     "preserve": "npm run build",
-    "serve": "browser-sync start -s 'dist' -f 'dist' --open"
+    "serve": "browser-sync start -s 'dist' --watch --no-open --no-ui"
   }
 }

@@ -1,0 +1,6 @@
+@import 'src/styles/reset.css';
+
+body {
+  font-family: sans-serif;
+  color: green;
+}
