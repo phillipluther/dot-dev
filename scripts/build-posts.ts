@@ -11,40 +11,37 @@ import {
 
 const timeHandle = 'Posts built';
 
-async function buildPosts(): Promise<PostData[]> {
+export async function buildPost(postData: PostData): Promise<void> {
   try {
-    console.time(timeHandle);
-    const postData = await getPostData();
+    const { html, metadata, assets } = postData;
 
-    await Promise.all(postData.map(async (post: PostData) => {
-      try {
-        const { html, metadata, assets } = post;
+    // render the post HTML from our template
+    const { slug, ...templateProps } = metadata;
+    const rendered = applyTemplate('post.njk', {
+      ...templateProps,
+      content: html,
+    });
+    const postDir = path.join(DIST_DIR, slug);
 
-        // render the post HTML from our template
-        const { slug, ...templateProps } = metadata;
-        const rendered = applyTemplate('post.njk', {
-          ...templateProps,
-          content: html,
-        });
-        const postDir = path.join(DIST_DIR, slug);
+    await fs.mkdir(postDir, { recursive: true });
+    await fs.writeFile(path.join(postDir, 'index.html'), rendered);
+    await Promise.all(assets.map((assetSrc) => processImage(assetSrc, postDir)));
 
-        await fs.mkdir(postDir, { recursive: true });
-        await fs.writeFile(path.join(postDir, 'index.html'), rendered);
-        await Promise.all(assets.map((assetSrc) => processImage(assetSrc, postDir)));
-
-        addToSitemap(metadata.url);
-
-        return postData;
-      } catch (writeError) {
-        console.error(writeError);
-      }
-    }));
-
-    console.timeEnd(timeHandle);
-    return postData;
+    addToSitemap(metadata.url);
   } catch (err) {
     console.error(err);
   }
 }
 
-export default buildPosts;
+export default async function buildPosts(): Promise<void> {
+  try {
+    console.time(timeHandle);
+    const postData = await getPostData();
+
+    await Promise.all(postData.map(buildPost));
+
+    console.timeEnd(timeHandle);
+  } catch (err) {
+    console.error(err);
+  }
+}

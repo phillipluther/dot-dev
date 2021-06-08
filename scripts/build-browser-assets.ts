@@ -10,8 +10,9 @@ const timeHandle = 'Browser assets built';
 
 export async function buildStyles(): Promise<void> {
   try {
+    const options = {};
     const styles = await fs.readFile(path.join(STYLES_SRC_DIR, 'base.css'));
-    const minified = new CleanCSS({}).minify(styles);
+    const minified = new CleanCSS(options).minify(styles);
 
     await fs.mkdir(DIST_DIR, { recursive: true });
     await fs.writeFile(path.join(DIST_DIR, 'styles.css'), minified.styles);

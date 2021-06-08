@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "author": "Phillip Luther <dev@phillipluther.com>",
   "dependencies": {
+    "@types/browser-sync": "^2.26.1",
     "@types/clean-css": "^4.2.4",
     "@types/dashify": "^1.0.0",
     "@types/marked": "^2.0.3",
@@ -39,6 +40,8 @@
     "build": "ts-node scripts/build.ts",
     "postbuild": "cp -r static/* dist",
     "preserve": "npm run build",
-    "serve": "browser-sync start -s 'dist' --watch --no-open --no-ui"
+    "serve": "browser-sync start -s 'dist' --no-ui",
+    "predev": "npm run build",
+    "dev": "ts-node scripts/dev-server.ts"
   }
 }
