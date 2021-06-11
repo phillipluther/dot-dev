@@ -11,7 +11,7 @@ import {
 
 const timeHandle = 'Posts built';
 
-export async function buildPost(postData: PostData): Promise<void> {
+export async function buildPost(postData: PostData): Promise<PostData> {
   try {
     const { html, metadata, assets } = postData;
 
@@ -28,6 +28,8 @@ export async function buildPost(postData: PostData): Promise<void> {
     await Promise.all(assets.map((assetSrc) => processImage(assetSrc, postDir)));
 
     addToSitemap(metadata.url);
+
+    return postData;
   } catch (err) {
     console.error(err);
   }

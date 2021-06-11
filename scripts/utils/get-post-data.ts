@@ -24,19 +24,21 @@ export interface PostData {
   markdown: string;
   html: string;
   assets: string[];
+  sourcePath: string;
 };
 
 const timeHandle = 'Gathered post data';
 
-async function getPostData(): Promise<PostData[]> {
+async function getPostData(isSilent: boolean = false): Promise<PostData[]> {
   try {
-    console.time(timeHandle);
+    !isSilent && console.time(timeHandle);
     const postDirs: string[] = await fs.readdir(POSTS_SRC_DIR);
 
     const postData = await Promise.all(postDirs.map(async (dirname) => {  
       const dirPath = path.join(POSTS_SRC_DIR, dirname);
       const dirContents = await fs.readdir(dirPath);
-      const mdFileContents = await fs.readFile(path.join(dirPath, 'index.md'), 'utf8');
+      const markdownSource = path.join(dirPath, 'index.md');
+      const mdFileContents = await fs.readFile(markdownSource, 'utf8');
 
       const { data, content: markdown } = graymatter(mdFileContents);
       const { href: url, pathname: slug } = new URL(`posts/${dirname}`, BASE_URL);
@@ -61,10 +63,11 @@ async function getPostData(): Promise<PostData[]> {
 
           return postAssets;
         }, []),
+        sourcePath: markdownSource,
       };
     }));
 
-    console.timeEnd(timeHandle);
+    !isSilent && console.timeEnd(timeHandle);
     return postData;
   } catch (err) {
     console.error(err);
@@ -74,6 +77,17 @@ async function getPostData(): Promise<PostData[]> {
 // cached results of reading/indexing all post markdown files
 let cachedPostData: PostData[];
 let toResolve: Promise<PostData[]>;
+
+export async function getPostDataBySourcePath(srcPath: string): Promise<PostData|null> {
+  try {
+    const postData = await getPostData(true); // silent
+    const match = postData.filter(({ sourcePath }) => sourcePath === srcPath);
+
+    return (match.length > 0) ? match[0] : null;
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 export default async function fetchPostData(): Promise<PostData[]> {
   if (cachedPostData) {

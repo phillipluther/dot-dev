@@ -21,9 +21,7 @@ const sitemapUrls = {};
 export function addToSitemap(url: string, sitemapMetadata: SitemapMetadata = {}): void {
   const resolvedUrl = /^http/.test(url) ? url : new URL(url, BASE_URL).href;
 
-  if (sitemapUrls[resolvedUrl]) {
-    console.warn(`[WARNING] URL ${url} is already included in sitemap`);
-  } else {
+  if (!sitemapUrls[resolvedUrl]) {
     sitemapUrls[resolvedUrl] = true;
     sitemapData.push({
       url: resolvedUrl,
