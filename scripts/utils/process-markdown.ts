@@ -1,4 +1,3 @@
-import path from 'path';
 import marked from 'marked';
 import prism from 'prismjs';
 import loadLanguages from 'prismjs/components/';
@@ -41,5 +40,5 @@ marked.Renderer.prototype.paragraph = (mdSnippet) => mdSnippet.startsWith('<img'
   ? `<div class="processed-md-image">${mdSnippet}</div>\n`
   : `<p>${mdSnippet}</p>`;
 
-export default (md: string, slug: string, options?: object): string => 
-  marked.parse(md, options = {});
+export default (md: string, slug: string, options = {}): string => 
+  marked.parse(md, options);

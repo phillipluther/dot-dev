@@ -17,7 +17,7 @@ export interface PostMetadata {
   slug?: string;
   tags?: string[];
   url?: string;
-};
+}
 
 export interface PostData {
   metadata: PostMetadata;
@@ -25,11 +25,11 @@ export interface PostData {
   html: string;
   assets: string[];
   sourcePath: string;
-};
+}
 
 const timeHandle = 'Gathered post data';
 
-async function getPostData(isSilent: boolean = false): Promise<PostData[]> {
+async function getPostData(isSilent = false): Promise<PostData[]> {
   try {
     !isSilent && console.time(timeHandle);
     const postDirs: string[] = await fs.readdir(POSTS_SRC_DIR);

@@ -1,15 +1,24 @@
 import dashify from 'dashify';
-import getPostData from './get-post-data';
+import getPostData, { PostData } from './get-post-data';
 
-let cachedPostsByTag: object;
-let toResolve: Promise<object>;
-
-const getCachedPosts = (tag?: string): object => tag ? cachedPostsByTag[tag] : cachedPostsByTag;
 const timeHandle = 'Gathered posts by tag';
 
-export const tagNameMap = {};
+export interface PostsByTag {
+  [key: string]: PostData[];
+}
 
-export async function getPostsByTag(tagName?: string): Promise<object> {
+export interface TagNameMap {
+  [key: string]: string;
+}
+
+let cachedPostsByTag: PostsByTag;
+let toResolve: Promise<PostsByTag>;
+
+const getCachedPosts = (tag?: string): PostData[]|PostsByTag => tag ? cachedPostsByTag[tag] : cachedPostsByTag;
+
+export const tagNameMap: TagNameMap = {};
+
+export async function getPostsByTag(tagName?: string): Promise<PostData[]|PostsByTag> {
   try {
     if (cachedPostsByTag) {
       return getCachedPosts(tagName);

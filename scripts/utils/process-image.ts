@@ -4,8 +4,6 @@ import {
   BREAKPOINTS,
   IMAGE_SIZES,
   SUPPORTED_IMAGE_TYPES,
-  SRC_DIR,
-  DIST_DIR
 } from './constants';
 
 // TODO: can you dynamically build enums in TS? would be nice to just snag the keys
@@ -15,7 +13,7 @@ enum ImageSize {
   sm = 'sm',
   md = 'md',
   lg = 'lg',
-};
+}
 
 export interface ProcessedImageDetails {
   name: string;
@@ -91,4 +89,4 @@ export async function processImage(srcPath: string, destDir: string): Promise<vo
   } catch (err) {
     console.error(err);
   }
-};
+}
