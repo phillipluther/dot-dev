@@ -30,8 +30,9 @@
     <p class="header__title">{{ branding() }}</p>
   {%- endif %}
 
-    <nav class="header__nav">
-    {{ primaryNav() }}
+    <hr class="divider">
+    <nav class="header__navWrapper">
+    {{ primaryNav('header__nav') }}
     </nav>
   </header>
 
@@ -48,11 +49,11 @@
   <footer class="footer">
     <section class="footer__section">
       <h2 class="sr">Supplemental Navigation</h2>
-      <nav class="footer__nav">
+      <nav class="footer__navWrapper">
         <p class="footer__backToTop">
           <a href="#top" class="backToTop">Back to Top</a>
         </p>
-        {{ primaryNav() }}
+        {{ primaryNav('footer__nav') }}
       </nav>
     </section>
     <section class="footer__section footer__disclaimers">

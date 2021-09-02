@@ -1,6 +1,39 @@
 @import 'src/styles/reset.css';
+@import 'src/styles/a11y.css';
+
+main,
+.footer {
+  display: none;
+}
 
 body {
-  font-family: sans-serif;
-  /* color: orange; */
+  font-family: Georgia, serif;
+}
+
+.header {
+  padding: 16px;
+}
+
+.header__nav,
+.footer__nav {
+  display: flex;
+}
+
+.primaryNav {
+  margin-left: -16px;
+}
+
+.primaryNav__link {
+  display: block;
+  line-height: 48px;
+  padding: 0 16px;
+}
+
+
+@media (min-width: 960px) {
+  .header {
+    position: fixed;
+    left: 0;
+    top: 0;
+  }
 }

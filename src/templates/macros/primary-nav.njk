@@ -1,7 +1,7 @@
-{%- macro primaryNav() %}
-<ul class="primaryNav">
+{%- macro primaryNav(classHook) %}
+<ul class="primaryNav {{ classHook }}">
   <li class="primaryNav__item">
-    <a href="/" class="primaryNav__link">Posts</a>
+    <a href="/" class="primaryNav__link">Blog Posts</a>
   </li>
   <li class="primaryNav__item">
     <a href="/about" class="primaryNav__link">About</a>
